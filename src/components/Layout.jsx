@@ -44,15 +44,7 @@ export default function Layout({ children }) {
         top: 0,
         zIndex: 100,
       }}>
-        <div style={{
-          maxWidth: '1100px',
-          margin: '0 auto',
-          padding: '0 24px',
-          height: '52px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+        <div className="nav-inner">
           {/* Logo */}
           <Link to="/dashboard" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{
@@ -87,7 +79,7 @@ export default function Layout({ children }) {
 
           {/* Nav links */}
           {user && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
+            <div className="nav-links">
               {navLink('/dashboard', 'Subskrypcje')}
               {navLink('/profile', 'Profil')}
               <button
@@ -115,7 +107,7 @@ export default function Layout({ children }) {
       </nav>
 
       {/* Content */}
-      <main style={{ flex: 1, maxWidth: '1100px', width: '100%', margin: '0 auto', padding: '32px 24px' }}>
+      <main className="layout-main">
         {children}
       </main>
     </div>

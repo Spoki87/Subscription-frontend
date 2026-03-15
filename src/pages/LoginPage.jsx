@@ -144,13 +144,18 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p style={{
-          textAlign: 'center',
-          marginTop: '20px',
-          fontFamily: 'var(--font-mono)',
-          fontSize: '12px',
-          color: 'var(--text-dim)',
-        }}>
+        <p style={{ textAlign: 'center', marginTop: '16px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-dim)' }}>
+          <Link
+            to="/forgot-password"
+            style={{ color: 'var(--text-dim)', textDecoration: 'none' }}
+            onMouseEnter={e => e.target.style.color = 'var(--orange)'}
+            onMouseLeave={e => e.target.style.color = 'var(--text-dim)'}
+          >
+            Zapomniałeś hasła?
+          </Link>
+        </p>
+
+        <p style={{ textAlign: 'center', marginTop: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-dim)' }}>
           {'// '} Nie masz konta?{' '}
           <Link
             to="/register"

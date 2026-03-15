@@ -148,7 +148,7 @@ export default function DashboardPage() {
   return (
     <Layout>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '32px' }}>
+      <div className="dashboard-header">
         <div>
           <p style={{ margin: '0 0 6px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--orange)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
             {'>'} records.subscriptions
@@ -164,7 +164,7 @@ export default function DashboardPage() {
             </p>
           )}
         </div>
-        <button onClick={handleNew} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <button onClick={handleNew} className="btn-primary dashboard-add-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           + Dodaj
         </button>
       </div>
@@ -232,24 +232,8 @@ export default function DashboardPage() {
       )}
 
       {deleteConfirm && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 200,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(0,0,0,0.75)',
-          backdropFilter: 'blur(4px)',
-          padding: '24px',
-        }}>
-          <div style={{
-            background: 'var(--surface)',
-            border: '1px solid rgba(255,68,68,0.35)',
-            width: '100%',
-            maxWidth: '380px',
-            boxShadow: '0 0 40px rgba(255,68,68,0.1)',
-          }}>
+        <div className="modal-overlay">
+          <div className="modal-box delete-confirm-box" style={{ border: '1px solid rgba(255,68,68,0.35)', boxShadow: '0 0 40px rgba(255,68,68,0.1)', maxWidth: '380px' }}>
             <div style={{ height: '2px', background: 'linear-gradient(90deg, #ff4444, transparent)' }} />
             <div style={{ padding: '28px', textAlign: 'center' }}>
               <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#ff4444', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>

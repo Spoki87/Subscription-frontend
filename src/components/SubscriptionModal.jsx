@@ -60,24 +60,8 @@ export default function SubscriptionModal({ subscription, onClose, onSaved }) {
   }
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      zIndex: 200,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'rgba(0,0,0,0.75)',
-      backdropFilter: 'blur(4px)',
-      padding: '24px',
-    }}>
-      <div style={{
-        background: 'var(--surface)',
-        border: '1px solid var(--border-orange)',
-        width: '100%',
-        maxWidth: '440px',
-        boxShadow: '0 0 40px rgba(255,102,0,0.15)',
-      }}>
+    <div className="modal-overlay">
+      <div className="modal-box">
         {/* Top accent bar */}
         <div style={{ height: '2px', background: 'linear-gradient(90deg, var(--orange), transparent)' }} />
 

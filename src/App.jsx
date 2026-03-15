@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage'
 import ConfirmEmailPage from './pages/ConfirmEmailPage'
 import DashboardPage from './pages/DashboardPage'
 import ProfilePage from './pages/ProfilePage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/register/confirm" element={<ConfirmEmailPage />} />
           <Route path="/confirm" element={<ConfirmEmailPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route
             path="/dashboard"
             element={
