@@ -4,12 +4,10 @@ import { resetPassword, setNewPassword } from '../api/userApi'
 
 const labelStyle = {
   display: 'block',
-  fontFamily: 'var(--font-mono)',
-  fontSize: '11px',
+  fontSize: '13px',
+  fontWeight: 600,
   color: 'var(--text-dim)',
-  letterSpacing: '0.12em',
-  textTransform: 'uppercase',
-  marginBottom: '8px',
+  marginBottom: '6px',
 }
 
 export default function ForgotPasswordPage() {
@@ -58,39 +56,35 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div
-      className="grid-bg scanlines"
-      style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}
-    >
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', background: 'var(--bg)' }}>
       <div style={{ width: '100%', maxWidth: '400px' }}>
-        {/* Header */}
-        <div style={{ marginBottom: '40px', textAlign: 'center' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '22px', fontWeight: 700, color: 'var(--orange)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Sub</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '22px', fontWeight: 700, color: 'white', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Tracker</span>
+
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '2px', marginBottom: '8px' }}>
+            <span style={{ fontSize: '26px', fontWeight: 700, color: 'var(--orange)', letterSpacing: '-0.02em' }}>Sub</span>
+            <span style={{ fontSize: '26px', fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.02em' }}>Tracker</span>
           </div>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-dim)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-            {'>'} auth.reset_password
-          </p>
+          <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-dim)' }}>Resetowanie hasła</p>
         </div>
 
         {/* Card */}
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', padding: '32px' }}>
-          <div style={{ height: '2px', background: 'linear-gradient(90deg, var(--orange), transparent)', margin: '-32px -32px 28px' }} />
+        <div style={{ background: 'var(--surface)', border: '1.5px solid var(--border)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)', padding: '32px' }}>
+          <div style={{ height: '3px', background: 'var(--orange)', borderRadius: '3px 3px 0 0', margin: '-32px -32px 28px' }} />
 
           {!sent ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <p style={{ margin: 0, fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                {'// '} Wyślemy na Twój email link do ustawienia nowego hasła.
+              <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+                Wyślemy na Twój adres email link do ustawienia nowego hasła.
               </p>
-              {sendError && <div className="alert-error">{'[ERR] '}{sendError}</div>}
+              {sendError && <div className="alert-error">{sendError}</div>}
               <button onClick={handleSend} disabled={sending} className="btn-primary" style={{ width: '100%' }}>
-                {sending ? '[ Wysyłam... ]' : '[ Wyślij kod na email ]'}
+                {sending ? 'Wysyłanie...' : 'Wyślij link resetujący'}
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div className="alert-success">{'[OK] '} Email z kodem został wysłany.</div>
+              <div className="alert-success">Email z kodem został wysłany. Sprawdź skrzynkę.</div>
               <div>
                 <label style={labelStyle}>Token z emaila</label>
                 <input name="token" value={form.token} onChange={handleChange} required className="input-field" placeholder="Wklej token..." />
@@ -103,20 +97,17 @@ export default function ForgotPasswordPage() {
                 <label style={labelStyle}>Potwierdź hasło</label>
                 <input name="confirmPassword" type="password" value={form.confirmPassword} onChange={handleChange} required className="input-field" placeholder="••••••••" />
               </div>
-              {error && <div className="alert-error">{'[ERR] '}{error}</div>}
-              {success && <div className="alert-success">{'[OK] '}{success}</div>}
+              {error && <div className="alert-error">{error}</div>}
+              {success && <div className="alert-success">{success}</div>}
               <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%' }}>
-                {loading ? '[ ... ]' : '[ Ustaw nowe hasło ]'}
+                {loading ? 'Zapisywanie...' : 'Ustaw nowe hasło'}
               </button>
             </form>
           )}
         </div>
 
-        <p style={{ textAlign: 'center', marginTop: '20px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-dim)' }}>
-          {'// '}
-          <Link
-            to="/login"
-            style={{ color: 'var(--orange)', textDecoration: 'none' }}
+        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px', color: 'var(--text-dim)' }}>
+          <Link to="/login" style={{ color: 'var(--orange)', fontWeight: 600, textDecoration: 'none' }}
             onMouseEnter={e => e.target.style.textDecoration = 'underline'}
             onMouseLeave={e => e.target.style.textDecoration = 'none'}
           >

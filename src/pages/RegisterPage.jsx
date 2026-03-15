@@ -2,6 +2,14 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { register } from '../api/userApi'
 
+const labelStyle = {
+  display: 'block',
+  fontSize: '13px',
+  fontWeight: 600,
+  color: 'var(--text-dim)',
+  marginBottom: '6px',
+}
+
 export default function RegisterPage() {
   const navigate = useNavigate()
   const [form, setForm] = useState({ username: '', email: '', password: '' })
@@ -32,42 +40,24 @@ export default function RegisterPage() {
     }
   }
 
-  const labelStyle = {
-    display: 'block',
-    fontFamily: 'var(--font-mono)',
-    fontSize: '11px',
-    color: 'var(--text-dim)',
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-    marginBottom: '8px',
-  }
-
   return (
-    <div
-      className="grid-bg scanlines"
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '24px',
-      }}
-    >
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', background: 'var(--bg)' }}>
       <div style={{ width: '100%', maxWidth: '400px' }}>
-        <div style={{ marginBottom: '40px', textAlign: 'center' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '22px', fontWeight: 700, color: 'var(--orange)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Sub</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '22px', fontWeight: 700, color: 'white', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Tracker</span>
+
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '2px', marginBottom: '8px' }}>
+            <span style={{ fontSize: '26px', fontWeight: 700, color: 'var(--orange)', letterSpacing: '-0.02em' }}>Sub</span>
+            <span style={{ fontSize: '26px', fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.02em' }}>Tracker</span>
           </div>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-dim)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-            {'>'} system.auth.register
-          </p>
+          <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-dim)' }}>Utwórz nowe konto</p>
         </div>
 
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', padding: '32px' }}>
-          <div style={{ height: '2px', background: 'linear-gradient(90deg, var(--orange), transparent)', margin: '-32px -32px 28px' }} />
+        {/* Card */}
+        <div style={{ background: 'var(--surface)', border: '1.5px solid var(--border)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)', padding: '32px' }}>
+          <div style={{ height: '3px', background: 'var(--orange)', borderRadius: '3px 3px 0 0', margin: '-32px -32px 28px' }} />
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             <div>
               <label style={labelStyle}>Nazwa użytkownika</label>
               <input
@@ -110,26 +100,17 @@ export default function RegisterPage() {
               />
             </div>
 
-            {error && (
-              <div className="alert-error">{'[ERR] '}{error}</div>
-            )}
+            {error && <div className="alert-error">{error}</div>}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary"
-              style={{ width: '100%', marginTop: '4px' }}
-            >
-              {loading ? '[ Rejestracja... ]' : '[ Zarejestruj się ]'}
+            <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', marginTop: '4px' }}>
+              {loading ? 'Rejestracja...' : 'Zarejestruj się'}
             </button>
           </form>
         </div>
 
-        <p style={{ textAlign: 'center', marginTop: '20px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-dim)' }}>
-          {'// '} Masz już konto?{' '}
-          <Link
-            to="/login"
-            style={{ color: 'var(--orange)', textDecoration: 'none' }}
+        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px', color: 'var(--text-dim)' }}>
+          Masz już konto?{' '}
+          <Link to="/login" style={{ color: 'var(--orange)', fontWeight: 600, textDecoration: 'none' }}
             onMouseEnter={e => e.target.style.textDecoration = 'underline'}
             onMouseLeave={e => e.target.style.textDecoration = 'none'}
           >

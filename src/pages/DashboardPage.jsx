@@ -16,48 +16,21 @@ function SubscriptionCard({ sub, onEdit, onDelete }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         background: 'var(--surface)',
-        border: `1px solid ${hovered ? 'var(--border-orange)' : 'var(--border)'}`,
+        border: `1.5px solid ${hovered ? 'var(--border-orange)' : 'var(--border)'}`,
+        borderRadius: 'var(--radius)',
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '12px',
+        gap: '10px',
         transition: 'border-color 0.2s, box-shadow 0.2s',
-        boxShadow: hovered ? '0 0 20px rgba(255,102,0,0.08)' : 'none',
-        position: 'relative',
-        overflow: 'hidden',
+        boxShadow: hovered ? '0 4px 20px rgba(249,115,22,0.1)' : 'var(--shadow-sm)',
       }}
     >
-      {/* Top left corner accent */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '3px',
-        height: '100%',
-        background: hovered ? 'var(--orange)' : 'transparent',
-        transition: 'background 0.2s',
-      }} />
-
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
-        <h3 style={{
-          margin: 0,
-          fontFamily: 'var(--font-mono)',
-          fontSize: '14px',
-          fontWeight: 700,
-          color: 'white',
-          letterSpacing: '0.04em',
-          textTransform: 'uppercase',
-        }}>
+        <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: 'var(--text)' }}>
           {sub.name}
         </h3>
-        <span style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '16px',
-          fontWeight: 700,
-          color: 'var(--orange)',
-          whiteSpace: 'nowrap',
-          letterSpacing: '0.02em',
-        }}>
+        <span style={{ fontSize: '17px', fontWeight: 700, color: 'var(--orange)', whiteSpace: 'nowrap' }}>
           {formatPrice(sub.price)}
         </span>
       </div>
@@ -65,7 +38,6 @@ function SubscriptionCard({ sub, onEdit, onDelete }) {
       {sub.description && (
         <p style={{
           margin: 0,
-          fontFamily: 'var(--font-body)',
           fontSize: '13px',
           color: 'var(--text-dim)',
           lineHeight: 1.5,
@@ -78,26 +50,12 @@ function SubscriptionCard({ sub, onEdit, onDelete }) {
         </p>
       )}
 
-      <div style={{
-        display: 'flex',
-        gap: '8px',
-        paddingTop: '8px',
-        borderTop: '1px solid var(--border)',
-        marginTop: 'auto',
-      }}>
-        <button
-          onClick={() => onEdit(sub)}
-          className="btn-ghost"
-          style={{ flex: 1, padding: '8px', fontSize: '11px' }}
-        >
-          [ Edit ]
+      <div style={{ display: 'flex', gap: '8px', paddingTop: '8px', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
+        <button onClick={() => onEdit(sub)} className="btn-ghost" style={{ flex: 1, padding: '8px', fontSize: '13px' }}>
+          Edytuj
         </button>
-        <button
-          onClick={() => onDelete(sub)}
-          className="btn-danger"
-          style={{ flex: 1, padding: '8px', fontSize: '11px' }}
-        >
-          [ Del ]
+        <button onClick={() => onDelete(sub)} className="btn-danger" style={{ flex: 1, padding: '8px', fontSize: '13px' }}>
+          Usuń
         </button>
       </div>
     </div>
@@ -150,107 +108,70 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="dashboard-header">
         <div>
-          <p style={{ margin: '0 0 6px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--orange)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-            {'>'} records.subscriptions
-          </p>
-          <h1 style={{ margin: 0, fontFamily: 'var(--font-mono)', fontSize: '24px', fontWeight: 700, color: 'white', letterSpacing: '-0.01em' }}>
+          <h1 style={{ margin: '0 0 4px', fontSize: '22px', fontWeight: 700, color: 'var(--text)' }}>
             Subskrypcje
           </h1>
           {subscriptions.length > 0 && (
-            <p style={{ margin: '6px 0 0', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-dim)' }}>
-              {subscriptions.length} rekordów &nbsp;|&nbsp; suma:{' '}
-              <span style={{ color: 'var(--orange)' }}>{formatPrice(totalMonthly)}</span>
-              <span style={{ color: 'var(--text-dim)' }}> /mies.</span>
+            <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-dim)' }}>
+              {subscriptions.length} {subscriptions.length === 1 ? 'rekord' : 'rekordów'} &middot; suma miesięczna:{' '}
+              <span style={{ color: 'var(--orange)', fontWeight: 600 }}>{formatPrice(totalMonthly)}</span>
             </p>
           )}
         </div>
         <button onClick={handleNew} className="btn-primary dashboard-add-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          + Dodaj
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Dodaj subskrypcję
         </button>
       </div>
 
-      {/* Divider */}
-      <div style={{ height: '1px', background: 'linear-gradient(90deg, var(--orange), transparent)', marginBottom: '28px', opacity: 0.4 }} />
-
-      {error && (
-        <div className="alert-error" style={{ marginBottom: '20px' }}>
-          {'[ERR] '}{error}
-        </div>
-      )}
+      {error && <div className="alert-error" style={{ marginBottom: '20px' }}>{error}</div>}
 
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--orange)', letterSpacing: '0.1em' }}>
-            Loading...
-          </span>
+          <span style={{ fontSize: '14px', color: 'var(--text-dim)' }}>Ładowanie...</span>
         </div>
       ) : subscriptions.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '80px 0' }}>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-dim)', letterSpacing: '0.05em' }}>
-            {'// '} Brak rekordów w bazie danych.
-          </p>
-          <button
-            onClick={handleNew}
-            style={{
-              marginTop: '20px',
-              background: 'none',
-              border: 'none',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '13px',
-              color: 'var(--orange)',
-              cursor: 'pointer',
-              letterSpacing: '0.05em',
-              textDecoration: 'underline',
-            }}
-          >
-            {'>'} Dodaj pierwszą subskrypcję
-          </button>
+          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--orange-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+          </div>
+          <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text)', margin: '0 0 6px' }}>Brak subskrypcji</p>
+          <p style={{ fontSize: '14px', color: 'var(--text-dim)', margin: '0 0 20px' }}>Dodaj pierwszą subskrypcję, aby zacząć śledzić wydatki.</p>
+          <button onClick={handleNew} className="btn-primary">Dodaj subskrypcję</button>
         </div>
       ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: '16px',
-        }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
           {subscriptions.map((sub) => (
-            <SubscriptionCard
-              key={sub.id}
-              sub={sub}
-              onEdit={handleEdit}
-              onDelete={setDeleteConfirm}
-            />
+            <SubscriptionCard key={sub.id} sub={sub} onEdit={handleEdit} onDelete={setDeleteConfirm} />
           ))}
         </div>
       )}
 
       {modalOpen && (
-        <SubscriptionModal
-          subscription={editTarget}
-          onClose={handleModalClose}
-          onSaved={handleSaved}
-        />
+        <SubscriptionModal subscription={editTarget} onClose={handleModalClose} onSaved={handleSaved} />
       )}
 
       {deleteConfirm && (
         <div className="modal-overlay">
-          <div className="modal-box delete-confirm-box" style={{ border: '1px solid rgba(255,68,68,0.35)', boxShadow: '0 0 40px rgba(255,68,68,0.1)', maxWidth: '380px' }}>
-            <div style={{ height: '2px', background: 'linear-gradient(90deg, #ff4444, transparent)' }} />
-            <div style={{ padding: '28px', textAlign: 'center' }}>
-              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#ff4444', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>
-                // CONFIRM_DELETE
-              </p>
-              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'white', marginBottom: '6px' }}>
-                Usunąć subskrypcję?
-              </p>
-              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-dim)', marginBottom: '24px' }}>
-                <span style={{ color: 'var(--orange)' }}>{deleteConfirm.name}</span> zostanie trwale usunięta.
+          <div className="modal-box delete-confirm-box" style={{ maxWidth: '380px', borderTop: '3px solid var(--danger)' }}>
+            <div style={{ padding: '32px', textAlign: 'center' }}>
+              <div style={{ width: '52px', height: '52px', borderRadius: '50%', background: 'var(--danger-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                </svg>
+              </div>
+              <h3 style={{ margin: '0 0 8px', fontSize: '17px', fontWeight: 700, color: 'var(--text)' }}>Usuń subskrypcję</h3>
+              <p style={{ margin: '0 0 24px', fontSize: '14px', color: 'var(--text-dim)', lineHeight: 1.5 }}>
+                Czy na pewno chcesz usunąć <strong style={{ color: 'var(--text)' }}>{deleteConfirm.name}</strong>? Tej operacji nie można cofnąć.
               </p>
               <div style={{ display: 'flex', gap: '12px' }}>
                 <button onClick={() => setDeleteConfirm(null)} className="btn-ghost" style={{ flex: 1 }}>
-                  [ Anuluj ]
+                  Anuluj
                 </button>
                 <button onClick={() => handleDelete(deleteConfirm.id)} className="btn-danger" style={{ flex: 1 }}>
-                  [ Usuń ]
+                  Usuń
                 </button>
               </div>
             </div>

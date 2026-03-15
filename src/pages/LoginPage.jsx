@@ -2,6 +2,14 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
+const labelStyle = {
+  display: 'block',
+  fontSize: '13px',
+  fontWeight: 600,
+  color: 'var(--text-dim)',
+  marginBottom: '6px',
+}
+
 export default function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -29,68 +37,25 @@ export default function LoginPage() {
   }
 
   return (
-    <div
-      className="grid-bg scanlines"
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '24px',
-      }}
-    >
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', background: 'var(--bg)' }}>
       <div style={{ width: '100%', maxWidth: '400px' }}>
-        {/* Header */}
-        <div style={{ marginBottom: '40px', textAlign: 'center' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '22px',
-              fontWeight: 700,
-              color: 'var(--orange)',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-            }}>Sub</span>
-            <span style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '22px',
-              fontWeight: 700,
-              color: 'white',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-            }}>Tracker</span>
+
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '2px', marginBottom: '8px' }}>
+            <span style={{ fontSize: '26px', fontWeight: 700, color: 'var(--orange)', letterSpacing: '-0.02em' }}>Sub</span>
+            <span style={{ fontSize: '26px', fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.02em' }}>Tracker</span>
           </div>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-dim)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-            {'>'} system.auth.login
-          </p>
+          <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-dim)' }}>Zaloguj się do swojego konta</p>
         </div>
 
         {/* Card */}
-        <div style={{
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          padding: '32px',
-        }}>
-          {/* Top bar accent */}
-          <div style={{
-            height: '2px',
-            background: 'linear-gradient(90deg, var(--orange), transparent)',
-            margin: '-32px -32px 28px',
-          }} />
+        <div style={{ background: 'var(--surface)', border: '1.5px solid var(--border)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)', padding: '32px' }}>
+          <div style={{ height: '3px', background: 'var(--orange)', borderRadius: '3px 3px 0 0', margin: '-32px -32px 28px' }} />
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             <div>
-              <label style={{
-                display: 'block',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '11px',
-                color: 'var(--text-dim)',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                marginBottom: '8px',
-              }}>
-                Email
-              </label>
+              <label style={labelStyle}>Email</label>
               <input
                 name="email"
                 type="email"
@@ -104,17 +69,15 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label style={{
-                display: 'block',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '11px',
-                color: 'var(--text-dim)',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                marginBottom: '8px',
-              }}>
-                Hasło
-              </label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <label style={labelStyle}>Hasło</label>
+                <Link to="/forgot-password" style={{ fontSize: '13px', color: 'var(--text-dim)', textDecoration: 'none' }}
+                  onMouseEnter={e => e.target.style.color = 'var(--orange)'}
+                  onMouseLeave={e => e.target.style.color = 'var(--text-dim)'}
+                >
+                  Zapomniałeś hasła?
+                </Link>
+              </div>
               <input
                 name="password"
                 type="password"
@@ -127,39 +90,17 @@ export default function LoginPage() {
               />
             </div>
 
-            {error && (
-              <div className="alert-error">
-                {'[ERR] '}{error}
-              </div>
-            )}
+            {error && <div className="alert-error">{error}</div>}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary"
-              style={{ width: '100%', marginTop: '4px' }}
-            >
-              {loading ? '[ Logowanie... ]' : '[ Zaloguj się ]'}
+            <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', marginTop: '4px' }}>
+              {loading ? 'Logowanie...' : 'Zaloguj się'}
             </button>
           </form>
         </div>
 
-        <p style={{ textAlign: 'center', marginTop: '16px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-dim)' }}>
-          <Link
-            to="/forgot-password"
-            style={{ color: 'var(--text-dim)', textDecoration: 'none' }}
-            onMouseEnter={e => e.target.style.color = 'var(--orange)'}
-            onMouseLeave={e => e.target.style.color = 'var(--text-dim)'}
-          >
-            Zapomniałeś hasła?
-          </Link>
-        </p>
-
-        <p style={{ textAlign: 'center', marginTop: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-dim)' }}>
-          {'// '} Nie masz konta?{' '}
-          <Link
-            to="/register"
-            style={{ color: 'var(--orange)', textDecoration: 'none' }}
+        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px', color: 'var(--text-dim)' }}>
+          Nie masz konta?{' '}
+          <Link to="/register" style={{ color: 'var(--orange)', fontWeight: 600, textDecoration: 'none' }}
             onMouseEnter={e => e.target.style.textDecoration = 'underline'}
             onMouseLeave={e => e.target.style.textDecoration = 'none'}
           >

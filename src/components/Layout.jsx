@@ -17,16 +17,17 @@ export default function Layout({ children }) {
       <Link
         to={path}
         style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '12px',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
+          fontSize: '14px',
+          fontWeight: 500,
           color: active ? 'var(--orange)' : 'var(--text-dim)',
           textDecoration: 'none',
-          padding: '4px 0',
-          borderBottom: active ? '1px solid var(--orange)' : '1px solid transparent',
-          transition: 'color 0.15s, border-color 0.15s',
+          padding: '6px 12px',
+          borderRadius: '6px',
+          background: active ? 'var(--orange-dim)' : 'transparent',
+          transition: 'color 0.15s, background 0.15s',
         }}
+        onMouseEnter={e => { if (!active) { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.background = 'var(--surface-2)' } }}
+        onMouseLeave={e => { if (!active) { e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.background = 'transparent' } }}
       >
         {label}
       </Link>
@@ -34,50 +35,22 @@ export default function Layout({ children }) {
   }
 
   return (
-    <div className="grid-bg scanlines" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Navbar */}
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
       <nav style={{
+        background: 'rgba(255,255,255,0.92)',
+        backdropFilter: 'blur(12px)',
         borderBottom: '1px solid var(--border)',
-        background: 'rgba(10,10,10,0.95)',
-        backdropFilter: 'blur(8px)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
       }}>
         <div className="nav-inner">
-          {/* Logo */}
-          <Link to="/dashboard" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '14px',
-              fontWeight: 700,
-              color: 'var(--orange)',
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-            }}>
-              Sub
-            </span>
-            <span style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '14px',
-              fontWeight: 700,
-              color: 'white',
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-            }}>
-              Tracker
-            </span>
-            <span style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              background: 'var(--orange)',
-              boxShadow: '0 0 8px var(--orange)',
-              display: 'inline-block',
-            }} />
+          <Link to="/dashboard" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '2px' }}>
+            <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--orange)', letterSpacing: '-0.01em' }}>Sub</span>
+            <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.01em' }}>Tracker</span>
           </Link>
 
-          {/* Nav links */}
           {user && (
             <div className="nav-links">
               {navLink('/dashboard', 'Subskrypcje')}
@@ -85,19 +58,18 @@ export default function Layout({ children }) {
               <button
                 onClick={handleLogout}
                 style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '12px',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: '#555',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: 'var(--text-dim)',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  padding: '4px 0',
-                  transition: 'color 0.15s',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  transition: 'color 0.15s, background 0.15s',
                 }}
-                onMouseEnter={e => e.target.style.color = '#ff4444'}
-                onMouseLeave={e => e.target.style.color = '#555'}
+                onMouseEnter={e => { e.currentTarget.style.color = 'var(--danger)'; e.currentTarget.style.background = 'var(--danger-dim)' }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.background = 'transparent' }}
               >
                 Wyloguj
               </button>
@@ -106,7 +78,6 @@ export default function Layout({ children }) {
         </div>
       </nav>
 
-      {/* Content */}
       <main className="layout-main">
         {children}
       </main>

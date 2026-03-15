@@ -5,25 +5,19 @@ import Layout from '../components/Layout'
 
 const labelStyle = {
   display: 'block',
-  fontFamily: 'var(--font-mono)',
-  fontSize: '11px',
+  fontSize: '13px',
+  fontWeight: 600,
   color: 'var(--text-dim)',
-  letterSpacing: '0.12em',
-  textTransform: 'uppercase',
-  marginBottom: '8px',
+  marginBottom: '6px',
 }
 
-function SectionCard({ tag, title, children }) {
+function SectionCard({ title, children }) {
   return (
-    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', marginBottom: '16px', overflow: 'hidden' }}>
-      <div style={{ height: '2px', background: 'linear-gradient(90deg, var(--orange), transparent)' }} />
+    <div style={{ background: 'var(--surface)', border: '1.5px solid var(--border)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-sm)', marginBottom: '16px', overflow: 'hidden' }}>
+      <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)' }}>
+        <h2 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: 'var(--text)' }}>{title}</h2>
+      </div>
       <div style={{ padding: '24px' }}>
-        <p style={{ margin: '0 0 4px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--orange)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-          {tag}
-        </p>
-        <h2 style={{ margin: '0 0 20px', fontFamily: 'var(--font-mono)', fontSize: '14px', fontWeight: 700, color: 'white', letterSpacing: '0.04em' }}>
-          {title}
-        </h2>
         {children}
       </div>
     </div>
@@ -48,8 +42,6 @@ export default function ProfilePage() {
     e.preventDefault()
     if (form.newPassword !== form.confirmPassword) { setError('Nowe hasła nie są identyczne.'); return }
     setLoading(true)
-    setError('')
-    setSuccess('')
     try {
       await changePassword(form.oldPassword, form.newPassword)
       setSuccess('Hasło zostało zmienione.')
@@ -64,34 +56,30 @@ export default function ProfilePage() {
   return (
     <Layout>
       <div className="profile-section" style={{ maxWidth: '560px' }}>
+
         {/* Page header */}
-        <div style={{ marginBottom: '32px' }}>
-          <p style={{ margin: '0 0 6px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--orange)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-            {'>'} user.settings
-          </p>
-          <h1 style={{ margin: 0, fontFamily: 'var(--font-mono)', fontSize: '24px', fontWeight: 700, color: 'white' }}>
-            Profil
-          </h1>
+        <div style={{ marginBottom: '28px' }}>
+          <h1 style={{ margin: '0 0 4px', fontSize: '22px', fontWeight: 700, color: 'var(--text)' }}>Profil</h1>
+          <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-dim)' }}>Zarządzaj ustawieniami konta</p>
         </div>
-        <div style={{ height: '1px', background: 'linear-gradient(90deg, var(--orange), transparent)', marginBottom: '28px', opacity: 0.4 }} />
 
         {/* Account info */}
-        <SectionCard tag="// account.info" title="Informacje o koncie">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'var(--border)' }}>
+        <SectionCard title="Informacje o koncie">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             {[
               { label: 'Rola', value: user?.role || '—' },
-              { label: 'Status', value: 'ACTIVE' },
+              { label: 'Status', value: 'Aktywny' },
             ].map(({ label, value }) => (
-              <div key={label} style={{ background: 'var(--surface-2)', padding: '14px 16px' }}>
-                <p style={{ margin: '0 0 4px', fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-dim)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</p>
-                <p style={{ margin: 0, fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--orange)', letterSpacing: '0.05em' }}>{value}</p>
+              <div key={label} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
+                <p style={{ margin: '0 0 3px', fontSize: '12px', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</p>
+                <p style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: 'var(--text)' }}>{value}</p>
               </div>
             ))}
           </div>
         </SectionCard>
 
         {/* Change password */}
-        <SectionCard tag="// auth.security" title="Zmień hasło">
+        <SectionCard title="Zmień hasło">
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
               <label style={labelStyle}>Obecne hasło</label>
@@ -137,12 +125,12 @@ export default function ProfilePage() {
               />
             </div>
 
-            {error && <div className="alert-error">{'[ERR] '}{error}</div>}
-            {success && <div className="alert-success">{'[OK] '}{success}</div>}
+            {error && <div className="alert-error">{error}</div>}
+            {success && <div className="alert-success">{success}</div>}
 
-            <div style={{ display: 'flex', gap: '12px', paddingTop: '4px' }}>
+            <div>
               <button type="submit" disabled={loading} className="btn-primary">
-                {loading ? '[ ... ]' : '[ Zapisz nowe hasło ]'}
+                {loading ? 'Zapisywanie...' : 'Zapisz nowe hasło'}
               </button>
             </div>
           </form>
