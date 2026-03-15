@@ -14,3 +14,12 @@ export const updateSubscription = (id, data) =>
 
 export const deleteSubscription = (id) =>
   axiosClient.delete(`/api/subscriptions/${id}`)
+
+export const getReportSummary = () =>
+  axiosClient.get('/api/subscriptions/report/summary')
+
+export const getReportByModel = () =>
+  axiosClient.get('/api/subscriptions/report/by-model')
+
+export const getReportByCurrency = () =>
+  axiosClient.get('/api/subscriptions/report/by-currency')

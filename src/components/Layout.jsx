@@ -54,6 +54,7 @@ export default function Layout({ children }) {
           {user && (
             <div className="nav-links">
               {navLink('/dashboard', 'Subskrypcje')}
+              {navLink('/reports', 'Raporty')}
               {navLink('/profile', 'Profil')}
               <button
                 onClick={handleLogout}
