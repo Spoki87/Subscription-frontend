@@ -9,8 +9,8 @@ export const confirmEmail = (token) =>
 export const changePassword = (oldPassword, newPassword) =>
   axiosClient.post('/api/user/change-password', { oldPassword, newPassword })
 
-export const resetPassword = () =>
-  axiosClient.post('/api/user/reset-password')
+export const resetPassword = (email) =>
+  axiosClient.post('/api/user/reset-password', { email })
 
 export const setNewPassword = (token, newPassword) =>
   axiosClient.post('/api/user/set-new-password', { token, newPassword })

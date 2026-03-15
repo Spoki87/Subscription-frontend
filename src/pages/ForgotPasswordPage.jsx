@@ -11,6 +11,7 @@ const labelStyle = {
 }
 
 export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [sendError, setSendError] = useState('')
@@ -20,11 +21,12 @@ export default function ForgotPasswordPage() {
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleSend = async () => {
+  const handleSend = async (e) => {
+    e.preventDefault()
     setSending(true)
     setSendError('')
     try {
-      await resetPassword()
+      await resetPassword(email)
       setSent(true)
     } catch (err) {
       setSendError(err.response?.data?.message || 'Nie udało się wysłać emaila.')
@@ -73,15 +75,27 @@ export default function ForgotPasswordPage() {
           <div style={{ height: '3px', background: 'var(--orange)', borderRadius: '3px 3px 0 0', margin: '-32px -32px 28px' }} />
 
           {!sent ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <form onSubmit={handleSend} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-                Wyślemy na Twój adres email link do ustawienia nowego hasła.
+                Podaj adres email powiązany z kontem. Wyślemy na niego link do ustawienia nowego hasła.
               </p>
+              <div>
+                <label style={labelStyle}>Adres email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); setSendError('') }}
+                  required
+                  autoComplete="email"
+                  className="input-field"
+                  placeholder="adres@email.com"
+                />
+              </div>
               {sendError && <div className="alert-error">{sendError}</div>}
-              <button onClick={handleSend} disabled={sending} className="btn-primary" style={{ width: '100%' }}>
+              <button type="submit" disabled={sending} className="btn-primary" style={{ width: '100%' }}>
                 {sending ? 'Wysyłanie...' : 'Wyślij link resetujący'}
               </button>
-            </div>
+            </form>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div className="alert-success">Email z kodem został wysłany. Sprawdź skrzynkę.</div>
