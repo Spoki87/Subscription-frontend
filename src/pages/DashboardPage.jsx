@@ -27,12 +27,28 @@ function SubscriptionCard({ sub, onEdit, onDelete }) {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
-        <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: 'var(--text)' }}>
-          {sub.name}
-        </h3>
+        <div style={{ minWidth: 0 }}>
+          <h3 style={{ margin: '0 0 6px', fontSize: '15px', fontWeight: 700, color: 'var(--text)' }}>
+            {sub.name}
+          </h3>
+          <span style={{
+            display: 'inline-block',
+            fontSize: '11px',
+            fontWeight: 600,
+            padding: '2px 7px',
+            borderRadius: '999px',
+            background: sub.subscriptionModel === 'YEARLY' ? 'rgba(99,102,241,0.12)' : 'var(--orange-dim)',
+            color: sub.subscriptionModel === 'YEARLY' ? '#818cf8' : 'var(--orange)',
+          }}>
+            {sub.subscriptionModel === 'YEARLY' ? 'Roczna' : 'Miesięczna'}
+          </span>
+        </div>
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
           <span style={{ fontSize: '17px', fontWeight: 700, color: 'var(--orange)', whiteSpace: 'nowrap', display: 'block' }}>
             {formatPrice(sub.convertedPrice ?? sub.price, sub.displayCurrency ?? sub.currency ?? 'PLN')}
+            <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-dim)' }}>
+              {sub.subscriptionModel === 'YEARLY' ? '/rok' : '/mies.'}
+            </span>
           </span>
           {sub.currency && sub.displayCurrency && sub.currency !== sub.displayCurrency && (
             <span style={{ fontSize: '11px', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
@@ -109,7 +125,10 @@ export default function DashboardPage() {
   }
 
   const displayCurrency = subscriptions[0]?.displayCurrency ?? subscriptions[0]?.currency ?? 'PLN'
-  const totalMonthly = subscriptions.reduce((sum, s) => sum + Number(s.convertedPrice ?? s.price), 0)
+  const totalMonthly = subscriptions.reduce((sum, s) => {
+    const price = Number(s.convertedPrice ?? s.price)
+    return sum + (s.subscriptionModel === 'YEARLY' ? price / 12 : price)
+  }, 0)
 
   return (
     <Layout>

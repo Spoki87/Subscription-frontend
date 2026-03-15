@@ -103,17 +103,40 @@ export default function ProfilePage() {
         {/* Change currency */}
         <SectionCard title="Waluta wyświetlania">
           <form onSubmit={handleCurrencySubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div>
-              <label style={labelStyle}>Preferowana waluta</label>
-              <select
-                value={selectedCurrency}
-                onChange={(e) => { setSelectedCurrency(e.target.value); setCurrencyError(''); setCurrencySuccess('') }}
-                className="input-field"
-              >
-                <option value="PLN">PLN – złoty polski</option>
-                <option value="USD">USD – dolar amerykański</option>
-                <option value="EUR">EUR – euro</option>
-              </select>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+              {[
+                { value: 'PLN', symbol: 'zł', name: 'Złoty polski' },
+                { value: 'USD', symbol: '$', name: 'Dolar amerykański' },
+                { value: 'EUR', symbol: '€', name: 'Euro' },
+              ].map(({ value, symbol, name }) => {
+                const active = selectedCurrency === value
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => { setSelectedCurrency(value); setCurrencyError(''); setCurrencySuccess('') }}
+                    style={{
+                      padding: '14px 12px',
+                      borderRadius: 'var(--radius)',
+                      border: `1.5px solid ${active ? 'var(--orange)' : 'var(--border)'}`,
+                      background: active ? 'var(--orange-dim)' : 'var(--surface-2)',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    <div style={{ fontSize: '20px', fontWeight: 700, color: active ? 'var(--orange)' : 'var(--text)', marginBottom: '4px' }}>
+                      {symbol}
+                    </div>
+                    <div style={{ fontSize: '13px', fontWeight: 700, color: active ? 'var(--orange)' : 'var(--text)' }}>
+                      {value}
+                    </div>
+                    <div style={{ fontSize: '11px', color: active ? 'var(--orange)' : 'var(--text-dim)', marginTop: '2px' }}>
+                      {name}
+                    </div>
+                  </button>
+                )
+              })}
             </div>
             {currencyError && <div className="alert-error">{currencyError}</div>}
             {currencySuccess && <div className="alert-success">{currencySuccess}</div>}

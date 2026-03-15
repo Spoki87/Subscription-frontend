@@ -11,7 +11,7 @@ const labelStyle = {
 
 export default function SubscriptionModal({ subscription, onClose, onSaved }) {
   const isEdit = Boolean(subscription)
-  const [form, setForm] = useState({ name: '', description: '', price: '', currency: 'PLN' })
+  const [form, setForm] = useState({ name: '', description: '', price: '', currency: 'PLN', subscriptionModel: 'MONTHLY' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -22,6 +22,7 @@ export default function SubscriptionModal({ subscription, onClose, onSaved }) {
         description: subscription.description || '',
         price: subscription.price != null ? String(subscription.price) : '',
         currency: subscription.currency || 'PLN',
+        subscriptionModel: subscription.subscriptionModel || 'MONTHLY',
       })
     }
   }, [subscription])
@@ -41,6 +42,7 @@ export default function SubscriptionModal({ subscription, onClose, onSaved }) {
         description: form.description.trim() || undefined,
         price: parseFloat(form.price),
         currency: form.currency,
+        subscriptionModel: form.subscriptionModel,
       }
       if (isEdit) {
         await updateSubscription(subscription.id, payload)
@@ -58,6 +60,8 @@ export default function SubscriptionModal({ subscription, onClose, onSaved }) {
       setLoading(false)
     }
   }
+
+  const isMonthly = form.subscriptionModel === 'MONTHLY'
 
   return (
     <div className="modal-overlay">
@@ -101,9 +105,46 @@ export default function SubscriptionModal({ subscription, onClose, onSaved }) {
                 placeholder="Opcjonalny opis..."
               />
             </div>
+
+            {/* Billing model toggle */}
+            <div>
+              <label style={labelStyle}>Model rozliczenia *</label>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {[
+                  { value: 'MONTHLY', label: 'Miesięczna' },
+                  { value: 'YEARLY', label: 'Roczna' },
+                ].map(({ value, label }) => {
+                  const active = form.subscriptionModel === value
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => { setForm((prev) => ({ ...prev, subscriptionModel: value })); setError('') }}
+                      style={{
+                        flex: 1,
+                        padding: '10px',
+                        borderRadius: 'var(--radius-sm)',
+                        border: `1.5px solid ${active ? 'var(--orange)' : 'var(--border)'}`,
+                        background: active ? 'var(--orange-dim)' : 'var(--surface-2)',
+                        color: active ? 'var(--orange)' : 'var(--text-dim)',
+                        fontWeight: active ? 700 : 500,
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      {label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
             <div style={{ display: 'flex', gap: '12px' }}>
               <div style={{ flex: 1 }}>
-                <label style={labelStyle}>Cena miesięczna *</label>
+                <label style={labelStyle}>
+                  {isMonthly ? 'Cena miesięczna *' : 'Cena roczna *'}
+                </label>
                 <input name="price" type="number" value={form.price} onChange={handleChange} min="0.01" step="0.01" required className="input-field" placeholder="0.00" />
               </div>
               <div style={{ width: '110px' }}>
@@ -115,6 +156,12 @@ export default function SubscriptionModal({ subscription, onClose, onSaved }) {
                 </select>
               </div>
             </div>
+
+            {!isMonthly && form.price && (
+              <p style={{ margin: '-8px 0 0', fontSize: '12px', color: 'var(--text-dim)' }}>
+                ≈ {(parseFloat(form.price) / 12).toFixed(2)} {form.currency}/mies.
+              </p>
+            )}
 
             {error && <div className="alert-error">{error}</div>}
 
