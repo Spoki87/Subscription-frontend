@@ -221,10 +221,9 @@ export default function ProfilePage() {
         </div>
 
         <SectionCard title="Informacje o koncie">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             {[
               { label: 'Rola', value: user?.role || '—' },
-              { label: 'Waluta', value: user?.currency || '—' },
               { label: 'Status', value: 'Aktywny' },
             ].map(({ label, value }) => (
               <div key={label} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>

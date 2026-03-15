@@ -13,11 +13,12 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (email, password) => {
     const { data } = await apiLogin(email, password)
-    const { accessToken, refreshToken, role } = data.data
+    const { accessToken, refreshToken, role, currency } = data.data
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('refreshToken', refreshToken)
     localStorage.setItem('role', role)
-    setUser({ role, currency: localStorage.getItem('currency') })
+    localStorage.setItem('currency', currency)
+    setUser({ role, currency })
   }, [])
 
   const logout = useCallback(async () => {
