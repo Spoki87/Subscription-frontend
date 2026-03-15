@@ -7,7 +7,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const token = localStorage.getItem('accessToken')
     const role = localStorage.getItem('role')
-    return token ? { role } : null
+    const currency = localStorage.getItem('currency')
+    return token ? { role, currency } : null
   })
 
   const login = useCallback(async (email, password) => {
@@ -16,7 +17,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('refreshToken', refreshToken)
     localStorage.setItem('role', role)
-    setUser({ role })
+    setUser({ role, currency: localStorage.getItem('currency') })
   }, [])
 
   const logout = useCallback(async () => {
@@ -27,12 +28,18 @@ export function AuthProvider({ children }) {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
       localStorage.removeItem('role')
+      localStorage.removeItem('currency')
       setUser(null)
     }
   }, [])
 
+  const updateCurrency = useCallback((currency) => {
+    localStorage.setItem('currency', currency)
+    setUser((prev) => prev ? { ...prev, currency } : prev)
+  }, [])
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, updateCurrency }}>
       {children}
     </AuthContext.Provider>
   )

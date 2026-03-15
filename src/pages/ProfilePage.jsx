@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { changePassword } from '../api/userApi'
+import { changePassword, changeCurrency } from '../api/userApi'
 import Layout from '../components/Layout'
 
 const labelStyle = {
@@ -25,12 +25,17 @@ function SectionCard({ title, children }) {
 }
 
 export default function ProfilePage() {
-  const { user } = useAuth()
+  const { user, updateCurrency } = useAuth()
 
-  const [form, setForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' })
+  const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const [selectedCurrency, setSelectedCurrency] = useState(user?.currency || 'PLN')
+  const [currencyError, setCurrencyError] = useState('')
+  const [currencySuccess, setCurrencySuccess] = useState('')
+  const [currencyLoading, setCurrencyLoading] = useState(false)
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -43,13 +48,29 @@ export default function ProfilePage() {
     if (form.newPassword !== form.confirmPassword) { setError('Nowe hasła nie są identyczne.'); return }
     setLoading(true)
     try {
-      await changePassword(form.oldPassword, form.newPassword)
+      await changePassword(form.currentPassword, form.newPassword)
       setSuccess('Hasło zostało zmienione.')
-      setForm({ oldPassword: '', newPassword: '', confirmPassword: '' })
+      setForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
     } catch (err) {
       setError(err.response?.data?.message || 'Nie udało się zmienić hasła.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleCurrencySubmit = async (e) => {
+    e.preventDefault()
+    setCurrencyLoading(true)
+    setCurrencyError('')
+    setCurrencySuccess('')
+    try {
+      const { data } = await changeCurrency(selectedCurrency)
+      updateCurrency(data.data.currency)
+      setCurrencySuccess('Waluta została zmieniona.')
+    } catch (err) {
+      setCurrencyError(err.response?.data?.message || 'Nie udało się zmienić waluty.')
+    } finally {
+      setCurrencyLoading(false)
     }
   }
 
@@ -65,9 +86,10 @@ export default function ProfilePage() {
 
         {/* Account info */}
         <SectionCard title="Informacje o koncie">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
             {[
               { label: 'Rola', value: user?.role || '—' },
+              { label: 'Waluta', value: user?.currency || '—' },
               { label: 'Status', value: 'Aktywny' },
             ].map(({ label, value }) => (
               <div key={label} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '14px 16px' }}>
@@ -78,15 +100,40 @@ export default function ProfilePage() {
           </div>
         </SectionCard>
 
+        {/* Change currency */}
+        <SectionCard title="Waluta wyświetlania">
+          <form onSubmit={handleCurrencySubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div>
+              <label style={labelStyle}>Preferowana waluta</label>
+              <select
+                value={selectedCurrency}
+                onChange={(e) => { setSelectedCurrency(e.target.value); setCurrencyError(''); setCurrencySuccess('') }}
+                className="input-field"
+              >
+                <option value="PLN">PLN – złoty polski</option>
+                <option value="USD">USD – dolar amerykański</option>
+                <option value="EUR">EUR – euro</option>
+              </select>
+            </div>
+            {currencyError && <div className="alert-error">{currencyError}</div>}
+            {currencySuccess && <div className="alert-success">{currencySuccess}</div>}
+            <div>
+              <button type="submit" disabled={currencyLoading} className="btn-primary">
+                {currencyLoading ? 'Zapisywanie...' : 'Zapisz walutę'}
+              </button>
+            </div>
+          </form>
+        </SectionCard>
+
         {/* Change password */}
         <SectionCard title="Zmień hasło">
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
               <label style={labelStyle}>Obecne hasło</label>
               <input
-                name="oldPassword"
+                name="currentPassword"
                 type="password"
-                value={form.oldPassword}
+                value={form.currentPassword}
                 onChange={handleChange}
                 required
                 className="input-field"

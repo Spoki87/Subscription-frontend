@@ -3,8 +3,8 @@ import { getSubscriptions, deleteSubscription } from '../api/subscriptionApi'
 import Layout from '../components/Layout'
 import SubscriptionModal from '../components/SubscriptionModal'
 
-function formatPrice(price) {
-  return Number(price).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })
+function formatPrice(price, currency = 'PLN') {
+  return Number(price).toLocaleString('pl-PL', { style: 'currency', currency })
 }
 
 function SubscriptionCard({ sub, onEdit, onDelete }) {
@@ -30,9 +30,16 @@ function SubscriptionCard({ sub, onEdit, onDelete }) {
         <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: 'var(--text)' }}>
           {sub.name}
         </h3>
-        <span style={{ fontSize: '17px', fontWeight: 700, color: 'var(--orange)', whiteSpace: 'nowrap' }}>
-          {formatPrice(sub.price)}
-        </span>
+        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+          <span style={{ fontSize: '17px', fontWeight: 700, color: 'var(--orange)', whiteSpace: 'nowrap', display: 'block' }}>
+            {formatPrice(sub.convertedPrice ?? sub.price, sub.displayCurrency ?? sub.currency ?? 'PLN')}
+          </span>
+          {sub.currency && sub.displayCurrency && sub.currency !== sub.displayCurrency && (
+            <span style={{ fontSize: '11px', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+              {formatPrice(sub.price, sub.currency)}
+            </span>
+          )}
+        </div>
       </div>
 
       {sub.description && (
@@ -101,7 +108,8 @@ export default function DashboardPage() {
     }
   }
 
-  const totalMonthly = subscriptions.reduce((sum, s) => sum + Number(s.price), 0)
+  const displayCurrency = subscriptions[0]?.displayCurrency ?? subscriptions[0]?.currency ?? 'PLN'
+  const totalMonthly = subscriptions.reduce((sum, s) => sum + Number(s.convertedPrice ?? s.price), 0)
 
   return (
     <Layout>
@@ -114,7 +122,7 @@ export default function DashboardPage() {
           {subscriptions.length > 0 && (
             <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-dim)' }}>
               {subscriptions.length} {subscriptions.length === 1 ? 'rekord' : 'rekordów'} &middot; suma miesięczna:{' '}
-              <span style={{ color: 'var(--orange)', fontWeight: 600 }}>{formatPrice(totalMonthly)}</span>
+              <span style={{ color: 'var(--orange)', fontWeight: 600 }}>{formatPrice(totalMonthly, displayCurrency)}</span>
             </p>
           )}
         </div>

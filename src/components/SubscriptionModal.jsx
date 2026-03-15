@@ -11,7 +11,7 @@ const labelStyle = {
 
 export default function SubscriptionModal({ subscription, onClose, onSaved }) {
   const isEdit = Boolean(subscription)
-  const [form, setForm] = useState({ name: '', description: '', price: '' })
+  const [form, setForm] = useState({ name: '', description: '', price: '', currency: 'PLN' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -21,6 +21,7 @@ export default function SubscriptionModal({ subscription, onClose, onSaved }) {
         name: subscription.name || '',
         description: subscription.description || '',
         price: subscription.price != null ? String(subscription.price) : '',
+        currency: subscription.currency || 'PLN',
       })
     }
   }, [subscription])
@@ -39,6 +40,7 @@ export default function SubscriptionModal({ subscription, onClose, onSaved }) {
         name: form.name.trim(),
         description: form.description.trim() || undefined,
         price: parseFloat(form.price),
+        currency: form.currency,
       }
       if (isEdit) {
         await updateSubscription(subscription.id, payload)
@@ -99,9 +101,19 @@ export default function SubscriptionModal({ subscription, onClose, onSaved }) {
                 placeholder="Opcjonalny opis..."
               />
             </div>
-            <div>
-              <label style={labelStyle}>Cena miesięczna (PLN) *</label>
-              <input name="price" type="number" value={form.price} onChange={handleChange} min="0.01" step="0.01" required className="input-field" placeholder="0.00" />
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <div style={{ flex: 1 }}>
+                <label style={labelStyle}>Cena miesięczna *</label>
+                <input name="price" type="number" value={form.price} onChange={handleChange} min="0.01" step="0.01" required className="input-field" placeholder="0.00" />
+              </div>
+              <div style={{ width: '110px' }}>
+                <label style={labelStyle}>Waluta *</label>
+                <select name="currency" value={form.currency} onChange={handleChange} required className="input-field">
+                  <option value="PLN">PLN</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                </select>
+              </div>
             </div>
 
             {error && <div className="alert-error">{error}</div>}
