@@ -131,8 +131,8 @@ function ChangeCurrencyModal({ currentCurrency, onClose, onSaved }) {
     setLoading(true)
     setError('')
     try {
-      const { data } = await changeCurrency(selected)
-      onSaved(data.data.currency)
+      await changeCurrency(selected)
+      onSaved(selected)
     } catch (err) {
       setError(err.response?.data?.message || 'Nie udało się zmienić waluty.')
     } finally {
