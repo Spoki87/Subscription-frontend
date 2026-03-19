@@ -17,3 +17,6 @@ export const resetPassword = (email) =>
 
 export const setNewPassword = (token, newPassword) =>
   axiosClient.post('/api/user/set-new-password', { token, newPassword })
+
+export const resendConfirmation = (email) =>
+  axiosClient.post('/api/user/resend-confirmation', null, { params: { email } })

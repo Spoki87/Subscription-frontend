@@ -1,6 +1,30 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { resendConfirmation } from '../api/userApi'
+
+const ERROR_MESSAGES = {
+  'Account is not active': 'Konto nie zostało jeszcze aktywowane.',
+  'Bad credentials': 'Nieprawidłowy email lub hasło.',
+  'User not found': 'Nie znaleziono konta o podanym adresie email.',
+  'Account is locked': 'Konto zostało zablokowane.',
+  'Too many requests': 'Zbyt wiele prób logowania. Spróbuj ponownie za chwilę.',
+}
+
+function translateError(message) {
+  if (!message) return 'Wystąpił błąd. Spróbuj ponownie.'
+  for (const [key, pl] of Object.entries(ERROR_MESSAGES)) {
+    if (message.includes(key)) return pl
+  }
+  return message
+}
+
+const INACTIVE_KEYWORDS = ['not active', 'inactive', 'nie aktywn', 'not activated']
+
+function isInactiveError(message) {
+  if (!message) return false
+  return INACTIVE_KEYWORDS.some((kw) => message.toLowerCase().includes(kw))
+}
 
 const labelStyle = {
   display: 'block',
@@ -16,23 +40,49 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showResend, setShowResend] = useState(false)
+  const [resendLoading, setResendLoading] = useState(false)
+  const [resendMessage, setResendMessage] = useState('')
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     setError('')
+    setShowResend(false)
+    setResendMessage('')
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('')
+    setShowResend(false)
+    setResendMessage('')
     try {
       await login(form.email, form.password)
       navigate('/dashboard')
     } catch (err) {
-      setError(err.response?.data?.message || 'Nieprawidłowy email lub hasło.')
+      const rawMessage = err.response?.data?.message || ''
+      setError(translateError(rawMessage))
+      if (isInactiveError(rawMessage)) {
+        setShowResend(true)
+      }
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleResend = async () => {
+    setResendLoading(true)
+    setResendMessage('')
+    try {
+      await resendConfirmation(form.email)
+      setResendMessage('Link aktywacyjny został wysłany na podany adres email.')
+      setShowResend(false)
+    } catch (err) {
+      const raw = err.response?.data?.message || ''
+      setResendMessage(translateError(raw) || 'Nie udało się wysłać emaila. Spróbuj ponownie.')
+    } finally {
+      setResendLoading(false)
     }
   }
 
@@ -90,7 +140,39 @@ export default function LoginPage() {
               />
             </div>
 
-            {error && <div className="alert-error">{error}</div>}
+            {error && (
+              <div>
+                <div className="alert-error">{error}</div>
+                {showResend && (
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={resendLoading}
+                    style={{
+                      marginTop: '10px',
+                      width: '100%',
+                      padding: '9px',
+                      background: 'transparent',
+                      border: '1.5px solid var(--orange)',
+                      borderRadius: 'var(--radius)',
+                      color: 'var(--orange)',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      cursor: resendLoading ? 'not-allowed' : 'pointer',
+                      opacity: resendLoading ? 0.6 : 1,
+                    }}
+                  >
+                    {resendLoading ? 'Wysyłanie...' : 'Wyślij ponownie link aktywacyjny'}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {resendMessage && (
+              <div className={resendMessage.includes('wysłany') ? 'alert-success' : 'alert-error'}>
+                {resendMessage}
+              </div>
+            )}
 
             <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', marginTop: '4px' }}>
               {loading ? 'Logowanie...' : 'Zaloguj się'}
