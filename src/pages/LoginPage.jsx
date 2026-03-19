@@ -7,17 +7,27 @@ const ERROR_MESSAGES = {
   'User is disabled': 'Konto nie zostało jeszcze aktywowane.',
   'Account is not active': 'Konto nie zostało jeszcze aktywowane.',
   'Bad credentials': 'Nieprawidłowy email lub hasło.',
-  'User not found': 'Nie znaleziono konta o podanym adresie email.',
+  'User not found': 'Nieprawidłowy email lub hasło.',
   'Account is locked': 'Konto zostało zablokowane.',
   'Too many requests': 'Zbyt wiele prób logowania. Spróbuj ponownie za chwilę.',
+  'Internal Server Error': 'Nieprawidłowy email lub hasło.',
 }
 
-function translateError(message) {
-  if (!message) return 'Wystąpił błąd. Spróbuj ponownie.'
-  for (const [key, pl] of Object.entries(ERROR_MESSAGES)) {
-    if (message.includes(key)) return pl
+const HTTP_STATUS_MESSAGES = {
+  400: 'Nieprawidłowy email lub hasło.',
+  401: 'Nieprawidłowy email lub hasło.',
+  403: 'Nieprawidłowy email lub hasło.',
+  500: 'Nieprawidłowy email lub hasło.',
+}
+
+function translateError(message, status) {
+  if (message) {
+    for (const [key, pl] of Object.entries(ERROR_MESSAGES)) {
+      if (message.includes(key)) return pl
+    }
   }
-  return message
+  if (status && HTTP_STATUS_MESSAGES[status]) return HTTP_STATUS_MESSAGES[status]
+  return 'Nieprawidłowy email lub hasło.'
 }
 
 const INACTIVE_KEYWORDS = ['disabled', 'not active', 'inactive', 'nie aktywn', 'not activated']
@@ -63,7 +73,8 @@ export default function LoginPage() {
       navigate('/dashboard')
     } catch (err) {
       const rawMessage = err.response?.data?.message || ''
-      setError(translateError(rawMessage))
+      const status = err.response?.status
+      setError(translateError(rawMessage, status))
       if (isInactiveError(rawMessage)) {
         setShowResend(true)
       }
