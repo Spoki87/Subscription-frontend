@@ -201,6 +201,33 @@ export default function LoginPage() {
             Zarejestruj się
           </Link>
         </p>
+
+        <div style={{ textAlign: 'center', marginTop: '12px' }}>
+          <Link
+            to="/demo"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '14px',
+              fontWeight: 600,
+              color: 'var(--text-dim)',
+              textDecoration: 'none',
+              padding: '8px 20px',
+              borderRadius: 'var(--radius)',
+              border: '1.5px solid var(--border)',
+              background: 'var(--surface)',
+              transition: 'border-color 0.15s, color 0.15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--orange)'; e.currentTarget.style.color = 'var(--orange)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-dim)' }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Wypróbuj bez rejestracji
+          </Link>
+        </div>
       </div>
     </div>
   )

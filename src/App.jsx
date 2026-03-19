@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage'
 import ProfilePage from './pages/ProfilePage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ReportsPage from './pages/ReportsPage'
+import DemoPage from './pages/DemoPage'
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/register/confirm" element={<ConfirmEmailPage />} />
           <Route path="/confirm" element={<ConfirmEmailPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/demo" element={<DemoPage />} />
           <Route
             path="/dashboard"
             element={
