@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { resendConfirmation } from '../api/userApi'
 
 const ERROR_MESSAGES = {
+  'User is disabled': 'Konto nie zostało jeszcze aktywowane.',
   'Account is not active': 'Konto nie zostało jeszcze aktywowane.',
   'Bad credentials': 'Nieprawidłowy email lub hasło.',
   'User not found': 'Nie znaleziono konta o podanym adresie email.',
@@ -19,7 +20,7 @@ function translateError(message) {
   return message
 }
 
-const INACTIVE_KEYWORDS = ['not active', 'inactive', 'nie aktywn', 'not activated']
+const INACTIVE_KEYWORDS = ['disabled', 'not active', 'inactive', 'nie aktywn', 'not activated']
 
 function isInactiveError(message) {
   if (!message) return false
