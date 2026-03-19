@@ -1,16 +1,106 @@
-# React + Vite
+# SubTracker — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplikacja do zarządzania subskrypcjami. Umożliwia śledzenie wydatków na subskrypcje z obsługą wielu walut, raportowaniem i trybem demo bez rejestracji.
 
-Currently, two official plugins are available:
+**Backend:** [Subscription-backend](https://github.com/Spoki87/Subscription-backend) (Spring Boot, Java 17, PostgreSQL, Redis)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19** + **Vite 8**
+- **React Router v7**
+- **Axios** — komunikacja z API
+- **Recharts** — wykresy w raportach
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Uruchomienie
+
+```bash
+npm install
+npm run dev
+```
+
+Zmienna środowiskowa (opcjonalna — jeśli frontend i backend są na tym samym hoście):
+
+```env
+VITE_API_URL=http://localhost:8080
+```
+
+Jeśli `VITE_API_URL` nie jest ustawiona, requesty trafiają na ten sam origin (proxy Vite).
+
+---
+
+## Funkcje
+
+### Autoryzacja
+- Rejestracja z potwierdzeniem emaila
+- Logowanie / wylogowanie z JWT (access + refresh token)
+- Automatyczne odświeżanie tokena
+- Reset hasła przez email
+- Ponowne wysłanie linku aktywacyjnego (gdy konto nieaktywne)
+- Komunikaty błędów w języku polskim
+
+### Dashboard
+- Lista subskrypcji z podziałem na miesięczne i roczne
+- Dodawanie, edytowanie, usuwanie subskrypcji
+- Obsługa walut: PLN, USD, EUR z automatycznym przeliczaniem (NBP API po stronie backendu)
+- Suma miesięcznych wydatków w nagłówku
+
+### Raporty
+- Wykresy wydatków (Recharts)
+
+### Profil
+- Zmiana hasła
+- Zmiana preferowanej waluty wyświetlania
+
+### Tryb demo (`/demo`)
+- Dostępny bez rejestracji — przycisk „Wypróbuj bez rejestracji" na stronie logowania
+- Dane tylko w pamięci przeglądarki (znikają po odświeżeniu)
+- Obsługa wyłącznie PLN
+- Pełne dodawanie / edytowanie / usuwanie w lokalnym stanie
+
+---
+
+## Struktura projektu
+
+```
+src/
+├── api/
+│   ├── axiosClient.js       # Axios + interceptory (refresh token, auth)
+│   ├── authApi.js           # login, refresh, logout
+│   ├── userApi.js           # register, confirm, changePassword, changeCurrency, resendConfirmation
+│   └── subscriptionApi.js   # CRUD subskrypcji
+├── context/
+│   └── AuthContext.jsx      # Globalny stan użytkownika
+├── components/
+│   ├── Layout.jsx           # Nawigacja + wrapper strony
+│   ├── ProtectedRoute.jsx   # Ochrona tras wymagających logowania
+│   └── SubscriptionModal.jsx
+├── pages/
+│   ├── LoginPage.jsx
+│   ├── RegisterPage.jsx
+│   ├── ConfirmEmailPage.jsx
+│   ├── ForgotPasswordPage.jsx
+│   ├── DashboardPage.jsx
+│   ├── ProfilePage.jsx
+│   ├── ReportsPage.jsx
+│   └── DemoPage.jsx         # Tryb demo (bez API)
+└── App.jsx                  # Routing
+```
+
+---
+
+## Trasy
+
+| Ścieżka | Dostęp | Opis |
+|---|---|---|
+| `/login` | publiczna | Logowanie |
+| `/register` | publiczna | Rejestracja |
+| `/register/confirm` | publiczna | Potwierdzenie emaila |
+| `/forgot-password` | publiczna | Reset hasła |
+| `/demo` | publiczna | Tryb demo |
+| `/dashboard` | zalogowany | Lista subskrypcji |
+| `/profile` | zalogowany | Profil użytkownika |
+| `/reports` | zalogowany | Raporty |
